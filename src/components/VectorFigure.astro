@@ -1,0 +1,57 @@
+---
+// Static figure: a rigid vector A, the axes, and its components (3, 4).
+// Inline SVG so it stays crisp and adapts to the light/dark palette.
+---
+<figure class="figure vecfig">
+  <svg viewBox="0 0 360 260" role="img"
+    aria-label="A vector A drawn from the origin, with components 3 along x and 4 along y">
+    <g class="grid">
+      <line x1="96"  y1="24" x2="96"  y2="236" />
+      <line x1="136" y1="24" x2="136" y2="236" />
+      <line x1="176" y1="24" x2="176" y2="236" />
+      <line x1="216" y1="24" x2="216" y2="236" />
+      <line x1="256" y1="24" x2="256" y2="236" />
+      <line x1="296" y1="24" x2="296" y2="236" />
+      <line x1="24" y1="168" x2="336" y2="168" />
+      <line x1="24" y1="128" x2="336" y2="128" />
+      <line x1="24" y1="88"  x2="336" y2="88" />
+      <line x1="24" y1="48"  x2="336" y2="48" />
+    </g>
+
+    <!-- axes -->
+    <line class="axis" x1="24" y1="208" x2="336" y2="208" />
+    <line class="axis" x1="56" y1="236" x2="56"  y2="24" />
+    <polygon class="axis-head" points="336,208 328,204 328,212" />
+    <polygon class="axis-head" points="56,24 52,32 60,32" />
+
+    <!-- projection lines to the axes -->
+    <line class="proj" x1="176" y1="48" x2="176" y2="208" />
+    <line class="proj" x1="176" y1="48" x2="56"  y2="48" />
+
+    <!-- the vector -->
+    <line class="vec" x1="56" y1="208" x2="176" y2="48" />
+    <polygon class="vec-head" points="176,48 173.6,61.2 164,54" />
+
+    <!-- labels -->
+    <text class="lbl-axis" x="340" y="213">x</text>
+    <text class="lbl-axis" x="48"  y="18">y</text>
+    <text class="lbl-axis" x="40"  y="224">O</text>
+    <text class="lbl-comp" x="171" y="228">3</text>
+    <text class="lbl-comp" x="34"  y="53">4</text>
+    <text class="lbl-vec"  x="96"  y="116">A</text>
+  </svg>
+  <figcaption>A vector <em>A</em>, the axes, and its components: 3 along <em>x</em>, 4 along <em>y</em>.</figcaption>
+</figure>
+
+<style>
+  .vecfig svg { width: 100%; max-width: 420px; height: auto; }
+  .vecfig .grid line { stroke: rgba(128, 128, 128, 0.14); stroke-width: 1; }
+  .vecfig .axis { stroke: var(--muted); stroke-width: 1.5; }
+  .vecfig .axis-head { fill: var(--muted); }
+  .vecfig .proj { stroke: rgba(128, 128, 128, 0.6); stroke-width: 1.5; stroke-dasharray: 5 4; }
+  .vecfig .vec { stroke: var(--accent); stroke-width: 2.5; }
+  .vecfig .vec-head { fill: var(--accent); }
+  .vecfig .lbl-axis { fill: var(--muted); font: 13px var(--sans); }
+  .vecfig .lbl-comp { fill: var(--accent); font: 600 14px var(--sans); }
+  .vecfig .lbl-vec  { fill: var(--accent); font: italic 700 16px var(--serif); }
+</style>

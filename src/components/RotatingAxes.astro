@@ -1,0 +1,114 @@
+---
+// Interactive island: rotate the axes around the arrow's origin.
+// The arrow A is fixed; only its components (its readings along the current
+// axes) change. Rotation is one way to change axes — they need not stay
+// perpendicular or equally scaled — but it is the easiest to picture.
+---
+<div class="widget" data-rotaxes>
+  <div class="widget-readout">
+    <div><span style="display:inline-block; min-width:6em; color:var(--muted)">components</span> (<span class="mono" data-ax>3.0</span>, <span class="mono" data-ay>4.0</span>)</div>
+    <div><span style="display:inline-block; min-width:6em; color:var(--muted)">length</span> <span class="mono" data-len>5.0</span> <span style="color:var(--muted)">(unchanged)</span></div>
+  </div>
+  <div class="widget-controls">
+    <label>rotate the axes
+      <input type="range" min="-90" max="180" step="1" value="0" data-slider />
+    </label>
+  </div>
+  <canvas data-canvas width="600" height="460" role="img"
+    aria-label="A fixed arrow A with rotatable coordinate axes; its components change as the axes rotate, but its length stays the same."></canvas>
+  <p class="widget-hint">Rotate the axes. The arrow <em>A</em> never moves — only its components change. (Rotation is just one way to change axes; they need not stay perpendicular or equally scaled.)</p>
+</div>
+
+<script>
+  function setup(root: HTMLElement) {
+    const canvas = root.querySelector('[data-canvas]') as HTMLCanvasElement;
+    const slider = root.querySelector('[data-slider]') as HTMLInputElement;
+    const axOut = root.querySelector('[data-ax]') as HTMLElement;
+    const ayOut = root.querySelector('[data-ay]') as HTMLElement;
+    const lenOut = root.querySelector('[data-len]') as HTMLElement;
+    const ctx = canvas.getContext('2d')!;
+
+    const W = canvas.width, H = canvas.height;
+    const ox = 285, oy = 235, U = 34;   // origin (px) and pixels-per-unit
+    const Ax0 = 3, Ay0 = 4;             // the fixed arrow, in the reference frame
+    const css = (n: string) => getComputedStyle(root).getPropertyValue(n).trim();
+
+    function head(x1: number, y1: number, x2: number, y2: number, color: string, size = 11) {
+      const a = Math.atan2(y2 - y1, x2 - x1);
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - size * Math.cos(a - 0.42), y2 - size * Math.sin(a - 0.42));
+      ctx.lineTo(x2 - size * Math.cos(a + 0.42), y2 - size * Math.sin(a + 0.42));
+      ctx.closePath(); ctx.fill();
+    }
+
+    function draw(phiDeg: number) {
+      const muted = css('--muted') || '#888';
+      const ink = css('--ink') || '#222';
+      const accent = css('--accent') || '#b23a2e';
+      const phi = phiDeg * Math.PI / 180;
+      const c = Math.cos(phi), s = Math.sin(phi);
+
+      ctx.clearRect(0, 0, W, H);
+
+      // faint fixed grid, to anchor space so the arrow reads as fixed
+      ctx.strokeStyle = 'rgba(128,128,128,0.10)'; ctx.lineWidth = 1;
+      for (let x = ox % U; x < W; x += U) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+      for (let y = oy % U; y < H; y += U) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+      // rotating axes (pixel directions; screen y is flipped)
+      const L = 205, lab = 221;
+      const xdx = c, xdy = -s;     // e_x' = (c, s) world
+      const ydx = -s, ydy = -c;    // e_y' = (-s, c) world
+      ctx.strokeStyle = muted; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(ox - L * xdx, oy - L * xdy); ctx.lineTo(ox + L * xdx, oy + L * xdy); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ox - L * ydx, oy - L * ydy); ctx.lineTo(ox + L * ydx, oy + L * ydy); ctx.stroke();
+      head(ox, oy, ox + L * xdx, oy + L * xdy, muted, 10);
+      head(ox, oy, ox + L * ydx, oy + L * ydy, muted, 10);
+      ctx.fillStyle = muted; ctx.font = 'italic 14px Georgia, serif';
+      ctx.fillText('x′', ox + lab * xdx - 4, oy + lab * xdy + 4);
+      ctx.fillText('y′', ox + lab * ydx - 4, oy + lab * ydy + 4);
+
+      // components = projections onto the unit axis vectors
+      const ax = Ax0 * c + Ay0 * s;
+      const ay = -Ax0 * s + Ay0 * c;
+
+      const tip = { x: ox + Ax0 * U, y: oy - Ay0 * U };
+      const footX = { x: ox + ax * c * U, y: oy - ax * s * U };
+      const footY = { x: ox + ay * (-s) * U, y: oy - ay * c * U };
+
+      // projection lines (dashed) — tip to each axis
+      ctx.strokeStyle = 'rgba(128,128,128,0.55)'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(tip.x, tip.y); ctx.lineTo(footX.x, footX.y); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(tip.x, tip.y); ctx.lineTo(footY.x, footY.y); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // feet + component values
+      ctx.fillStyle = accent;
+      for (const f of [footX, footY]) { ctx.beginPath(); ctx.arc(f.x, f.y, 3.5, 0, Math.PI * 2); ctx.fill(); }
+      ctx.font = '600 13px system-ui, sans-serif';
+      ctx.fillText(ax.toFixed(1), footX.x + 6, footX.y - 6);
+      ctx.fillText(ay.toFixed(1), footY.x + 6, footY.y - 6);
+
+      // the fixed arrow A
+      ctx.strokeStyle = accent; ctx.lineWidth = 3; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(tip.x, tip.y); ctx.stroke();
+      head(ox, oy, tip.x, tip.y, accent, 13);
+      ctx.fillStyle = accent; ctx.font = 'italic 700 16px Georgia, serif';
+      ctx.fillText('A', tip.x + 8, tip.y - 2);
+
+      // origin
+      ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(ox, oy, 3, 0, Math.PI * 2); ctx.fill();
+
+      axOut.textContent = ax.toFixed(1);
+      ayOut.textContent = ay.toFixed(1);
+      lenOut.textContent = Math.sqrt(ax * ax + ay * ay).toFixed(1);
+    }
+
+    slider.addEventListener('input', () => draw(parseFloat(slider.value)));
+    draw(parseFloat(slider.value));
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-rotaxes]').forEach(setup);
+</script>

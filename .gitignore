@@ -1,0 +1,16 @@
+books/
+
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# generated types
+.vercel/
+.netlify/
+
+# os / editor
+.DS_Store
+*.log

@@ -1,0 +1,43 @@
+---
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  frontmatter?: { title?: string; description?: string };
+}
+
+const { title, description, frontmatter } = Astro.props;
+const pageTitle = frontmatter?.title ?? title ?? 'General Relativity, brick by brick';
+const pageDesc =
+  frontmatter?.description ??
+  description ??
+  'An interactive course in general relativity, built from first principles.';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={pageDesc} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <div class="layout">
+      <header class="site-header">
+        <a href="/" class="brand">GR<span>·</span>from scratch</a>
+        <nav>
+          <a href="/">Contents</a>
+        </nav>
+      </header>
+      <main class="content">
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <p>Built brick by brick, with rigor. · <a href="https://github.com/IlyaSolomatin/general_relativity">source</a></p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,52 @@
+---
+// Static figure: building A = 3 e_x + 4 e_y from the basis vectors.
+// Three unit copies of e_x laid tip to tail, then four of e_y, reach the tip
+// of A. Inline SVG using CSS variables, so it adapts to light/dark themes.
+---
+<figure class="figure basisfig">
+  <svg viewBox="0 0 344 314" role="img"
+    aria-label="Building the vector A as three copies of the unit vector e_x followed by four copies of e_y, laid tip to tail.">
+    <!-- faint unit grid -->
+    <g class="grid">
+      <line x1="56"  y1="48" x2="56"  y2="284" /><line x1="110" y1="48" x2="110" y2="284" />
+      <line x1="164" y1="48" x2="164" y2="284" /><line x1="218" y1="48" x2="218" y2="284" />
+      <line x1="272" y1="48" x2="272" y2="284" /><line x1="326" y1="48" x2="326" y2="284" />
+      <line x1="48" y1="272" x2="332" y2="272" /><line x1="48" y1="218" x2="332" y2="218" />
+      <line x1="48" y1="164" x2="332" y2="164" /><line x1="48" y1="110" x2="332" y2="110" />
+      <line x1="48" y1="56"  x2="332" y2="56" />
+    </g>
+
+    <!-- three copies of e_x along the bottom -->
+    <g class="basis">
+      <line x1="56"  y1="272" x2="110" y2="272" /><polygon points="110,272 102,268 102,276" />
+      <line x1="110" y1="272" x2="164" y2="272" /><polygon points="164,272 156,268 156,276" />
+      <line x1="164" y1="272" x2="218" y2="272" /><polygon points="218,272 210,268 210,276" />
+      <!-- four copies of e_y up the right leg -->
+      <line x1="218" y1="272" x2="218" y2="218" /><polygon points="218,218 214,226 222,226" />
+      <line x1="218" y1="218" x2="218" y2="164" /><polygon points="218,164 214,172 222,172" />
+      <line x1="218" y1="164" x2="218" y2="110" /><polygon points="218,110 214,118 222,118" />
+      <line x1="218" y1="110" x2="218" y2="56"  /><polygon points="218,56 214,64 222,64" />
+    </g>
+
+    <!-- the resultant A -->
+    <line class="res" x1="56" y1="272" x2="218" y2="56" />
+    <polygon class="res" points="218,56 214.8,68.6 206.8,62.6" />
+
+    <!-- labels -->
+    <text class="lab-basis" x="70"  y="292">e<tspan dy="3" font-size="10">x</tspan></text>
+    <text class="lab-basis" x="226" y="250">e<tspan dy="3" font-size="10">y</tspan></text>
+    <text class="lab-res"   x="106" y="150">A</text>
+  </svg>
+  <figcaption>Building <em>A</em> = 3 <em>e</em><sub>x</sub> + 4 <em>e</em><sub>y</sub>: three copies of the unit
+    vector <em>e</em><sub>x</sub>, then four copies of <em>e</em><sub>y</sub>, laid tip to tail, reach the tip of <em>A</em>.</figcaption>
+</figure>
+
+<style>
+  .basisfig svg { width: 100%; max-width: 380px; height: auto; }
+  .basisfig .grid line { stroke: rgba(128, 128, 128, 0.14); stroke-width: 1; }
+  .basisfig .basis line { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+  .basisfig .basis polygon { fill: var(--ink); }
+  .basisfig .res { stroke: var(--accent); fill: var(--accent); stroke-width: 3; stroke-linecap: round; }
+  .basisfig .lab-basis { fill: var(--ink); font-family: Georgia, serif; font-style: italic; font-size: 15px; }
+  .basisfig .lab-res  { fill: var(--accent); font-family: Georgia, serif; font-style: italic; font-weight: 700; font-size: 16px; }
+</style>

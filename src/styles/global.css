@@ -1,0 +1,229 @@
+/* ------------------------------------------------------------------ *
+ *  Minimalist design system.  One accent, generous whitespace,
+ *  a single readable column.  Light + dark via prefers-color-scheme.
+ * ------------------------------------------------------------------ */
+
+:root {
+  --bg:      #fbfaf8;
+  --surface: #ffffff;
+  --ink:     #1c1b1a;
+  --muted:   #6b6660;
+  --line:    #e7e3dd;
+  --accent:  #b23a2e;      /* a warm, restrained red */
+  --accent-soft: #f3e2df;
+  --serif: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --sans:  system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono:  'SF Mono', 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --measure: 42rem;        /* reading column width */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:      #16151a;
+    --surface: #1e1d24;
+    --ink:     #e9e6e1;
+    --muted:   #9a948c;
+    --line:    #302e38;
+    --accent:  #e8796b;
+    --accent-soft: #2c2126;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 1.075rem;
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.layout {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- header / footer --------------------------------------------- */
+.site-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: var(--measure);
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.4rem 1.25rem 0;
+}
+.brand {
+  font-family: var(--sans);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.brand span { color: var(--accent); margin: 0 0.15em; }
+.site-header nav { font-family: var(--sans); font-size: 0.85rem; }
+.site-header nav a { color: var(--muted); text-decoration: none; margin-left: 1rem; }
+.site-header nav a:hover { color: var(--accent); }
+
+.site-footer {
+  max-width: var(--measure);
+  width: 100%;
+  margin: 4rem auto 0;
+  padding: 1.5rem 1.25rem 2.5rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.site-footer a { color: var(--muted); }
+
+/* --- content column ---------------------------------------------- */
+.content {
+  max-width: var(--measure);
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 0;
+  flex: 1;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--sans);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 2.2em 0 0.6em;
+}
+h1 { font-size: 2.1rem; margin-top: 0.4em; }
+h2 { font-size: 1.5rem; padding-top: 0.4em; border-top: 1px solid var(--line); }
+h3 { font-size: 1.2rem; }
+/* Opt-in lead/intro paragraph — apply the `lead` class deliberately. */
+.content p.lead { font-size: 1.15rem; color: var(--muted); }
+
+a { color: var(--accent); text-underline-offset: 2px; }
+
+hr { border: none; border-top: 1px solid var(--line); margin: 2.5rem 0; }
+
+/* inline + block code */
+code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--accent-soft);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+pre { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+
+/* --- KaTeX sizing ------------------------------------------------- */
+.katex-display { margin: 1.4rem 0; overflow-x: auto; overflow-y: hidden; padding: 0.2rem 0; }
+.katex { font-size: 1.06em; }
+
+/* --- callouts ----------------------------------------------------- */
+.callout {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.6rem 0;
+  font-size: 0.98rem;
+}
+.callout-title {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin: 0 0 0.4rem;
+}
+.callout-body > :first-child { margin-top: 0; }
+.callout-body > :last-child  { margin-bottom: 0; }
+.callout-insight { border-left-color: #2e7d5b; }
+.callout-insight .callout-title { color: #2e7d5b; }
+.callout-warning { border-left-color: #c98a1e; }
+.callout-warning .callout-title { color: #c98a1e; }
+.callout-aside   { border-left-color: var(--muted); background: transparent; }
+.callout-aside .callout-title { color: var(--muted); }
+
+/* --- spoilers (collapsible) -------------------------------------- */
+.spoiler {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin: 1.6rem 0;
+  background: var(--surface);
+  overflow: hidden;
+}
+.spoiler > summary {
+  cursor: pointer;
+  padding: 0.75rem 1.1rem;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 0.92rem;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--ink);
+}
+.spoiler > summary::-webkit-details-marker { display: none; }
+.spoiler > summary::before {
+  content: '▸';
+  color: var(--accent);
+  transition: transform 0.15s ease;
+  display: inline-block;
+}
+.spoiler[open] > summary::before { transform: rotate(90deg); }
+.spoiler > summary:hover { color: var(--accent); }
+.spoiler-body { padding: 0 1.1rem 0.4rem; border-top: 1px solid var(--line); }
+
+/* --- figures ------------------------------------------------------ */
+.figure { margin: 1.8rem 0; text-align: center; }
+.figure img, .figure video, .figure svg {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.figure svg.vec-arrow { width: 370px; padding: 0.5rem; }
+.figure figcaption {
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 0.6rem;
+}
+
+/* --- table of contents (home) ------------------------------------ */
+.toc { list-style: none; padding: 0; margin: 2rem 0; }
+.toc li {
+  border-bottom: 1px solid var(--line);
+  padding: 0.85rem 0;
+}
+.toc a { font-family: var(--sans); font-weight: 600; text-decoration: none; }
+.toc .toc-sum { display: block; color: var(--muted); font-size: 0.92rem; margin-top: 0.15rem; }
+.toc .toc-num { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: 0.6rem; }
+
+/* --- interactive widget ------------------------------------------ */
+.widget {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 1rem 1.1rem 1.2rem;
+  margin: 1.8rem 0;
+}
+.widget-controls { font-family: var(--sans); font-size: 0.9rem; }
+.widget-controls label { display: block; color: var(--muted); }
+.widget-controls input[type="range"] { width: 100%; accent-color: var(--accent); margin-top: 0.4rem; }
+.widget-readout { margin: 0.6rem 0 0.9rem; color: var(--ink); }
+.widget canvas { width: 100%; height: auto; display: block; border-radius: 6px; }
+.widget-hint { font-family: var(--sans); font-size: 0.82rem; color: var(--muted); margin: 0.7rem 0 0; text-align: center; }
+.mono { font-family: var(--mono); color: var(--accent); font-weight: 600; }

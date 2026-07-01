@@ -1,0 +1,13 @@
+---
+interface Props {
+  title?: string;
+  open?: boolean;
+}
+const { title = 'Show more', open = false } = Astro.props;
+---
+<details class="spoiler" open={open}>
+  <summary>{title}</summary>
+  <div class="spoiler-body">
+    <slot />
+  </div>
+</details>

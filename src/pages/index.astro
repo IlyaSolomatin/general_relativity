@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Auto-build the table of contents from every lesson's frontmatter.
+const modules = import.meta.glob('./lessons/*.mdx', { eager: true });
+const lessons = Object.values(modules)
+  .map((m: any) => ({
+    title: m.frontmatter?.title ?? 'Untitled',
+    summary: m.frontmatter?.summary ?? '',
+    order: m.frontmatter?.order ?? 99,
+    hidden: m.frontmatter?.hidden ?? false,
+    url: m.url as string,
+  }))
+  .filter((l) => !l.hidden)
+  .sort((a, b) => a.order - b.order);
+---
+
+<BaseLayout title="General Relativity, brick by brick">
+  <h1>General Relativity, brick by brick</h1>
+
+  <p class="lead">
+    A course built the hard way — from first principles, with the mathematics
+    done in full and the intuition kept close behind it. Written to be
+    understood, not merely read.
+  </p>
+
+  <p>
+    Each lesson is a brick: introduced, argued until it is genuinely clear, then
+    set into place. The list below grows as we build.
+  </p>
+
+  <h2>Contents</h2>
+
+  {lessons.length === 0 ? (
+    <p><em>No lessons yet — the first brick is on its way.</em></p>
+  ) : (
+    <ol class="toc">
+      {lessons.map((l, i) => (
+        <li>
+          <a href={l.url}>
+            <span class="toc-num">{String(i + 1).padStart(2, '0')}</span>{l.title}
+          </a>
+          {l.summary && <span class="toc-sum">{l.summary}</span>}
+        </li>
+      ))}
+    </ol>
+  )}
+</BaseLayout>

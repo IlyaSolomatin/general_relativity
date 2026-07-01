@@ -1,0 +1,46 @@
+---
+// Static figure: the old basis (e_x, e_y) and a new basis (e_x', e_y')
+// obtained by rotating the old one counterclockwise by an angle phi (~33°).
+// Inline SVG using CSS variables, so it adapts to light/dark themes.
+---
+<figure class="figure rotbasis">
+  <svg viewBox="0 0 210 210" role="img"
+    aria-label="The old basis vectors e_x and e_y, and a new basis e_x-prime and e_y-prime rotated by an angle phi.">
+    <!-- old basis -->
+    <line class="b-old" x1="90" y1="180" x2="180" y2="180" />
+    <polygon class="f-old" points="180,180 170,184 170,176" />
+    <line class="b-old" x1="90" y1="180" x2="90" y2="90" />
+    <polygon class="f-old" points="90,90 94,100 86,100" />
+
+    <!-- new basis (rotated) -->
+    <line class="b-new" x1="90" y1="180" x2="165.5" y2="131" />
+    <polygon class="f-new" points="165.5,131 159.29,139.8 154.93,133.08" />
+    <line class="b-new" x1="90" y1="180" x2="41" y2="104.5" />
+    <polygon class="f-new" points="41,104.5 49.8,110.71 43.08,115.07" />
+
+    <!-- angle phi -->
+    <path class="arc" d="M 125 180 A 35 35 0 0 0 119.35 160.94" />
+
+    <!-- labels -->
+    <text class="lab old" x="184" y="185">e<tspan class="sub">x</tspan></text>
+    <text class="lab old" x="96"  y="84">e<tspan class="sub">y</tspan></text>
+    <text class="lab new" x="168" y="125">e<tspan class="sub">x′</tspan></text>
+    <text class="lab new" x="10"  y="101">e<tspan class="sub">y′</tspan></text>
+    <text class="lab new" x="129" y="172">φ</text>
+  </svg>
+  <figcaption>The old basis (<em>e</em><sub>x</sub>, <em>e</em><sub>y</sub>) and the new basis
+    (<em>e</em><sub>x′</sub>, <em>e</em><sub>y′</sub>), the old rotated by an angle <em>φ</em>.</figcaption>
+</figure>
+
+<style>
+  .rotbasis svg { width: 100%; max-width: 300px; height: auto; }
+  .rotbasis .b-old { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; }
+  .rotbasis .f-old { fill: var(--ink); }
+  .rotbasis .b-new { stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; }
+  .rotbasis .f-new { fill: var(--accent); }
+  .rotbasis .arc  { stroke: var(--accent); stroke-width: 1.5; fill: none; }
+  .rotbasis .lab  { font-family: Georgia, serif; font-style: italic; font-size: 15px; }
+  .rotbasis .lab.old { fill: var(--ink); }
+  .rotbasis .lab.new { fill: var(--accent); }
+  .rotbasis .sub  { font-size: 10px; baseline-shift: -3px; font-style: italic; }
+</style>

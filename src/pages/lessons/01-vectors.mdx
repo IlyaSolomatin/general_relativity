@@ -1,0 +1,267 @@
+---
+layout: ../../layouts/BaseLayout.astro
+title: "Vectors, step one — the object and its components"
+summary: "A vector is a geometric arrow that exists before any coordinates. Choosing axes gives it components: the numbers that describe it."
+order: 1
+---
+
+import Callout from '../../components/Callout.astro';
+import VectorArrow from '../../components/VectorArrow.astro';
+import VectorFigure from '../../components/VectorFigure.astro';
+import RotatingAxes from '../../components/RotatingAxes.astro';
+import RotatedBasis from '../../components/RotatedBasis.astro';
+import BasisVectorsFigure from '../../components/BasisVectorsFigure.astro';
+import VectorWithBasis from '../../components/VectorWithBasis.astro';
+import NewBasisFigure from '../../components/NewBasisFigure.astro';
+import Spoiler from '../../components/Spoiler.astro';
+
+# Vectors
+
+## A vector exists before any axes
+
+A vector is an arrow. It has a length and a direction, and nothing else.
+
+<VectorArrow />
+
+<Callout type="insight" title="The claim">
+  A vector exists on its own, before you draw any axes or set up coordinates.
+</Callout>
+
+Consider a displacement: *"walk 100 steps toward that mountain."* The
+instruction means something even if no one has drawn a grid on the ground. The
+grid is something we add afterward. The walk is real without it.
+
+## Choosing axes gives it components
+
+To calculate with the arrow, we need numbers. So we lay down axes.
+
+Draw two perpendicular axes, $x$ (east) and $y$ (north). Take the arrow *"3 steps
+east, 4 steps north."* Against these axes we read off two numbers:
+
+- along $x$:  $\;3$
+- along $y$:  $\;4$
+
+These two numbers, $(3, 4)$, are the **components** of the vector in this
+coordinate system.
+
+<Callout type="note" title="Definition">
+  The **components** of a vector are the numbers that describe it once you have
+  chosen axes — its readings along each axis.
+</Callout>
+
+The picture below shows the arrow, the axes, and its two components.
+
+<VectorFigure />
+
+So there are two separate things:
+
+- **the vector** — the arrow itself;
+- **its components** $(3, 4)$ — a description that depends on the axes you drew.
+
+## Different axes, different components
+
+The components are the arrow's readings against the axes *you chose*. Choose
+different axes and you read different numbers — for the same arrow.
+
+Our arrow is "3 east, 4 north," so in the east–north axes its components are
+$(3, 4)$. Now pick new axes whose $x$-axis points straight along the arrow. The
+arrow lies entirely on the new $x$-axis: it has some length along it and nothing
+across it. Its length is $5$ (a 3–4–5 right triangle), so in these axes its
+components are $(5, 0)$.
+
+So $(3, 4)$ and $(5, 0)$ describe the identical arrow. The arrow did not change;
+only the axes we measured it against did.
+
+Rotate the axes below and watch the components change while the arrow stays put.
+The rotation here keeps the axes perpendicular, but that is not required — axes
+can also be tilted unevenly or scaled. Rotation is just the easiest case to see.
+
+<RotatingAxes />
+
+## The axes as vectors: basis vectors
+
+So far the axes have been directions to measure against. Now we describe them
+with vectors. Along each axis, place a unit arrow — an arrow of length 1 pointing
+that way:
+
+- $e_x$: length 1, pointing east
+- $e_y$: length 1, pointing north
+
+<VectorWithBasis />
+
+These two arrows are the **basis vectors**. Our arrow "3 east, 4 north" is then
+built from them:
+
+$$A = 3\,e_x + 4\,e_y$$
+
+Read it literally: take 3 copies of $e_x$ and 4 copies of $e_y$, lay them tip to
+tail, and you reach the tip of $A$.
+
+<BasisVectorsFigure />
+
+<Callout type="note" title="Definition">
+  The **basis vectors** are unit arrows along the chosen axes. A vector's
+  **components** are the amounts of each basis vector needed to build it — here,
+  3 of $e_x$ and 4 of $e_y$.
+</Callout>
+
+## Changing the axes is changing the basis
+
+We want to be able to move from one set of axes to another — that is, to change
+the basis vectors — and to understand how the same vector will be written in
+different bases. "Choosing new axes" and "choosing new basis vectors" are the same move. Take the
+arrow again:
+
+- Old basis $e_x$ (east), $e_y$ (north):  $A = 3\,e_x + 4\,e_y$.
+- New basis $e_{x'}$, $e_{y'}$. Let it be, for example, a unit arrow along $A$, and a unit arrow perpendicular to it:  $A = 5\,e_{x'} + 0\,e_{y'}$.
+
+The arrow never moved. The basis vectors and the components changed *together*,
+so the combination still equals the same $A$:
+
+$$3\,e_x + 4\,e_y \;=\; 5\,e_{x'} + 0\,e_{y'} \;=\; A$$
+
+<NewBasisFigure />
+
+The components are free to change only because the basis changed underneath them,
+holding $A$ fixed.
+
+## The general rule for changing from one basis to another
+
+Take any new basis — two independent vectors $e_{x'}, e_{y'}$.
+Each is some combination of the old basis:
+
+$$
+\begin{aligned}
+e_{x'} &= a\,e_x + b\,e_y \\
+e_{y'} &= c\,e_x + d\,e_y
+\end{aligned}
+$$
+
+The numbers $a, b, c, d$ are arbitrary, subject only to the independence
+condition $ad - bc \neq 0$. Otherwise $e_{x'}$ and $e_{y'}$ do not form a basis,
+because one vector could be expressed in terms of the other (in our
+two-dimensional case that would mean the two basis vectors are parallel).
+
+Collect them as the matrix $S$ whose
+columns are the new basis vectors written in old coordinates:
+
+$$S = \begin{bmatrix} a & c \\ b & d \end{bmatrix}$$
+
+The arrow is one object in either basis:
+
+$$A_x\,e_x + A_y\,e_y \;=\; A_{x'}\,e_{x'} + A_{y'}\,e_{y'}$$
+
+Substitute the new basis vectors into the right-hand side and gather the $e_x$
+and $e_y$ terms:
+
+$$A = (a\,A_{x'} + c\,A_{y'})\,e_x + (b\,A_{x'} + d\,A_{y'})\,e_y$$
+
+Because the old basis is independent, the coefficients must match one for one.
+In matrix form,
+
+$$
+\begin{bmatrix} A_x \\ A_y \end{bmatrix}
+= S \begin{bmatrix} A_{x'} \\ A_{y'} \end{bmatrix}
+\qquad (\text{old} = S \cdot \text{new}).
+$$
+
+And $S$ is invertible precisely because the new vectors form a basis
+($ad - bc \neq 0$). Solving for the new components:
+
+$$
+\begin{bmatrix} A_{x'} \\ A_{y'} \end{bmatrix}
+= S^{-1} \begin{bmatrix} A_x \\ A_y \end{bmatrix}
+\qquad (\text{new} = S^{-1} \cdot \text{old}).
+$$
+
+No assumption entered beyond "it is a change of basis." The new basis vectors are
+the columns of $S$; the components transform by the inverse, $S^{-1}$.
+
+The two earlier results are just special cases:
+
+- **Rotation** by $\varphi$: $S = \begin{bmatrix}\cos\varphi & -\sin\varphi \\ \sin\varphi & \cos\varphi\end{bmatrix}$, and $S^{-1}$ is rotation by $-\varphi$ — the rule from the previous section.
+- **Doubling** the basis: $S = 2I$, so $S^{-1} = \tfrac{1}{2}I$ and the components halve.
+
+<Callout type="note" title="Definition">
+  Components that transform by the **inverse** $S^{-1}$ of the basis-change matrix
+  $S$ are called **contravariant** ("contra" = against: they vary against the
+  basis). Every arrow-type vector behaves this way. By convention they are marked
+  with an upstairs index, $A^x$.
+</Callout>
+
+<Spoiler title="Exercise">
+
+## Writing the new basis in the old
+
+To find the rule connecting old and new components, we first connect the two
+bases. The new basis vectors are arrows in the same plane, so each is a
+combination of $e_x$ and $e_y$.
+
+For example, let the new axes be the old ones rotated counterclockwise by an angle $\varphi$.
+Then
+
+$$
+\begin{aligned}
+e_{x'} &= \cos\varphi\,e_x + \sin\varphi\,e_y \\
+e_{y'} &= -\sin\varphi\,e_x + \cos\varphi\,e_y
+\end{aligned}
+$$
+
+These are not pulled from a hat. $e_{x'}$ is a unit arrow at angle $\varphi$ from
+the old $x$-axis, and a unit arrow at angle $\varphi$ has components
+$(\cos\varphi, \sin\varphi)$ — that is the definition of cosine and sine.
+Likewise $e_{y'}$ is a unit arrow at angle $\varphi + 90°$, giving
+$(-\sin\varphi, \cos\varphi)$.
+
+<RotatedBasis />
+
+As a check, at $\varphi = 90°$ we have $\cos 90° = 0$ and $\sin 90° = 1$, so
+$e_{x'} = e_y$ and $e_{y'} = -e_x$: a quarter-turn sends the new $x$-axis onto the
+old $y$-axis, and the new $y$-axis onto the old $-x$.
+
+## How the components change
+
+We have the rule for the basis vectors. Now the real target: the components.
+
+The arrow $A$ is the same object in either basis:
+
+$$A_x\,e_x + A_y\,e_y \;=\; A_{x'}\,e_{x'} + A_{y'}\,e_{y'}$$
+
+To compare the two sides, put everything in one basis. Write the old basis
+vectors in terms of the new ones. The new axes are the old rotated by $+\varphi$,
+so the old axes are the new rotated by $-\varphi$:
+
+$$
+\begin{aligned}
+e_x &= \cos\varphi\,e_{x'} - \sin\varphi\,e_{y'} \\
+e_y &= \sin\varphi\,e_{x'} + \cos\varphi\,e_{y'}
+\end{aligned}
+$$
+
+(This is the previous pair read backwards — swap primed and unprimed and flip the
+sign of $\varphi$ — or just solve those two equations for $e_x, e_y$.)
+
+Substitute into $A = A_x e_x + A_y e_y$ and gather the $e_{x'}$ and $e_{y'}$ terms:
+
+$$A = (A_x\cos\varphi + A_y\sin\varphi)\,e_{x'} + (-A_x\sin\varphi + A_y\cos\varphi)\,e_{y'}$$
+
+Compare with $A = A_{x'} e_{x'} + A_{y'} e_{y'}$. Because $e_{x'}$ and $e_{y'}$ are
+independent directions, the coefficients must match one for one:
+
+$$
+\begin{aligned}
+A_{x'} &= A_x\cos\varphi + A_y\sin\varphi \\
+A_{y'} &= -A_x\sin\varphi + A_y\cos\varphi
+\end{aligned}
+$$
+
+That is the rule: from the old components and the angle $\varphi$, it returns the
+new ones. It is exactly what the slider above computes — at $\varphi = 0$ it gives
+$(3,4)$ back; at the angle that lines the $x$-axis up with $A$, it gives $(5,0)$.
+
+<Callout type="insight" title="The pattern">
+  The axes turned by $+\varphi$, but the component pair turned by $-\varphi$. The
+  components rotate opposite to the axes.
+</Callout>
+
+</Spoiler>

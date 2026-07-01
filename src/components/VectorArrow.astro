@@ -1,0 +1,29 @@
+---
+// A single vector: just an arrow with a length and a direction — no axes.
+// Inline SVG using CSS variables, so it adapts to light/dark themes.
+interface Props {
+  caption?: string;
+}
+const {
+  caption = 'A vector: an arrow with a length and a direction. No axes required.',
+} = Astro.props;
+---
+<figure class="figure">
+  <svg viewBox="0 0 370 190" width="370" height="190" class="vec-arrow" role="img"
+       aria-label="A single arrow with a length and a direction, drawn without any axes.">
+    <!-- 'length', written along the shaft -->
+    <text x="150" y="92" transform="rotate(-25.3 150 92)" text-anchor="middle"
+          style="fill: var(--muted); font-family: Georgia, serif; font-style: italic; font-size: 15px;">length</text>
+    <!-- the arrow shaft -->
+    <line x1="60" y1="150" x2="236" y2="67"
+          style="stroke: var(--accent); stroke-width: 3; stroke-linecap: round;" />
+    <!-- the arrowhead -->
+    <polygon points="250,60 236.7,74 230.7,61.4" style="fill: var(--accent);" />
+    <!-- 'direction': a faint dashed continuation past the tip -->
+    <line x1="250" y1="60" x2="288" y2="42" stroke-dasharray="4 4"
+          style="stroke: var(--muted); stroke-width: 1.5;" />
+    <text x="294" y="40" text-anchor="start"
+          style="fill: var(--muted); font-family: Georgia, serif; font-style: italic; font-size: 15px;">direction</text>
+  </svg>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
