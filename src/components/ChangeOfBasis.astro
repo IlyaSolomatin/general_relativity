@@ -1,0 +1,145 @@
+---
+// Interactive: choose any new basis with the sliders a, b, c, d and watch the
+// SAME vector A pick up different components in the old vs. new basis.
+//   e_x' = a e_x + b e_y ,   e_y' = c e_x + d e_y ,   A = 3 e_x + 4 e_y (fixed).
+// Old basis/axes are fixed; the new ones follow the sliders. Pure vanilla JS.
+---
+<div class="widget" data-changebasis>
+  <div class="widget-controls cob-grid">
+    <label>a = <span class="mono" data-val="a">1.0</span><input type="range" min="-2" max="2" step="0.1" value="1" data-coef="a" /></label>
+    <label>c = <span class="mono" data-val="c">0.0</span><input type="range" min="-2" max="2" step="0.1" value="0" data-coef="c" /></label>
+    <label>b = <span class="mono" data-val="b">0.0</span><input type="range" min="-2" max="2" step="0.1" value="0" data-coef="b" /></label>
+    <label>d = <span class="mono" data-val="d">1.0</span><input type="range" min="-2" max="2" step="0.1" value="1" data-coef="d" /></label>
+  </div>
+  <canvas data-canvas width="620" height="420" role="img"
+    aria-label="A fixed vector A with a fixed old basis and an adjustable new basis set by a, b, c, d; the vector's components in both bases are drawn."></canvas>
+  <p class="widget-hint">The same vector <em>A</em> (red) in two bases: the fixed old basis (dark) and the new basis set by the sliders (green). Its components are marked on each set of axes.</p>
+  <p class="widget-hint cob-warn" data-warn hidden>
+    e<sub>x′</sub> and e<sub>y′</sub> are (nearly) parallel — they don't form a basis, so the new components blow up.
+  </p>
+</div>
+
+<script>
+  function setup(root: HTMLElement) {
+    const canvas = root.querySelector('[data-canvas]') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    const inp = (k: string) => root.querySelector(`[data-coef="${k}"]`) as HTMLInputElement;
+    const val = (k: string) => root.querySelector(`[data-val="${k}"]`) as HTMLElement;
+    const warn = root.querySelector('[data-warn]') as HTMLElement;
+
+    const W = canvas.width, H = canvas.height;
+    const ox = 150, oy = 300, U = 42;
+    const Ax = 3, Ay = 4;               // the fixed vector, in old coordinates
+    const green = '#2e7d5b';
+    const css = (n: string) => getComputedStyle(root).getPropertyValue(n).trim();
+    const px = (x: number) => ox + x * U;
+    const py = (y: number) => oy - y * U;
+
+    function arrow(x1: number, y1: number, x2: number, y2: number, color: string, w = 2.5, hs = 11) {
+      if (Math.hypot(x2 - x1, y2 - y1) < 1) return;
+      const ang = Math.atan2(y2 - y1, x2 - x1);
+      ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - hs * Math.cos(ang - 0.42), y2 - hs * Math.sin(ang - 0.42));
+      ctx.lineTo(x2 - hs * Math.cos(ang + 0.42), y2 - hs * Math.sin(ang + 0.42));
+      ctx.closePath(); ctx.fill();
+    }
+    function dashed(x1: number, y1: number, x2: number, y2: number, color: string) {
+      ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    function through(dx: number, dy: number, color: string) {   // line through origin along (dx,dy)
+      if (Math.hypot(dx, dy) < 1e-6) return;
+      const L = 14;
+      ctx.strokeStyle = color; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(px(-L * dx), py(-L * dy)); ctx.lineTo(px(L * dx), py(L * dy)); ctx.stroke();
+    }
+    function label(base: string, sub: string, x: number, y: number, color: string) {
+      ctx.fillStyle = color;
+      ctx.font = 'italic 14px Georgia, serif';
+      ctx.fillText(base, x, y);
+      const w = ctx.measureText(base).width;
+      ctx.font = 'italic 10px Georgia, serif';
+      ctx.fillText(sub, x + w + 1, y + 3);
+    }
+
+    function draw() {
+      const a = +inp('a').value, b = +inp('b').value, c = +inp('c').value, d = +inp('d').value;
+      const muted = css('--muted') || '#888', ink = css('--ink') || '#222', accent = css('--accent') || '#b23a2e';
+      ctx.clearRect(0, 0, W, H);
+
+      // old axes
+      ctx.strokeStyle = muted; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(0, py(0)); ctx.lineTo(W, py(0)); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(px(0), 0); ctx.lineTo(px(0), H); ctx.stroke();
+
+      // new axes (light green) along the new basis directions
+      through(a, b, 'rgba(46,125,91,0.30)');
+      through(c, d, 'rgba(46,125,91,0.30)');
+
+      // old-basis decomposition of A (dashed grey) — the "3 and 4"
+      dashed(px(Ax), py(Ay), px(Ax), py(0), 'rgba(128,128,128,0.5)');
+      dashed(px(Ax), py(Ay), px(0), py(Ay), 'rgba(128,128,128,0.5)');
+      ctx.fillStyle = muted; ctx.font = '600 13px system-ui, sans-serif';
+      ctx.fillText(String(Ax), px(Ax) - 4, py(0) + 17);
+      ctx.fillText(String(Ay), px(0) - 20, py(Ay) + 4);
+
+      // new-basis decomposition of A (dashed green), if the new basis is valid
+      const det = a * d - b * c, eps = 1e-9;   // only flag an exactly-parallel basis
+      let axp = NaN, ayp = NaN;
+      if (Math.abs(det) >= eps) {
+        axp = (Ax * d - Ay * c) / det;
+        ayp = (Ay * a - Ax * b) / det;
+        const fxX = axp * a, fxY = axp * b;   // foot along e_x'
+        const fyX = ayp * c, fyY = ayp * d;   // foot along e_y'
+        dashed(px(Ax), py(Ay), px(fxX), py(fxY), 'rgba(46,125,91,0.65)');
+        dashed(px(Ax), py(Ay), px(fyX), py(fyY), 'rgba(46,125,91,0.65)');
+        ctx.fillStyle = green;
+        ctx.beginPath(); ctx.arc(px(fxX), py(fxY), 3.5, 0, 7); ctx.fill();
+        ctx.beginPath(); ctx.arc(px(fyX), py(fyY), 3.5, 0, 7); ctx.fill();
+        ctx.font = '600 13px system-ui, sans-serif';
+        ctx.fillText(axp.toFixed(1), px(fxX) + 7, py(fxY) - 6);
+        ctx.fillText(ayp.toFixed(1), px(fyX) + 7, py(fyY) - 6);
+      }
+
+      // old basis unit vectors
+      arrow(px(0), py(0), px(1), py(0), ink, 2, 9);
+      arrow(px(0), py(0), px(0), py(1), ink, 2, 9);
+      label('e', 'x', px(1) + 4, py(0) + 16, ink);
+      label('e', 'y', px(0) - 20, py(1) - 2, ink);
+
+      // new basis vectors
+      arrow(px(0), py(0), px(a), py(b), green, 2.5, 11);
+      arrow(px(0), py(0), px(c), py(d), green, 2.5, 11);
+      if (Math.hypot(a, b) > 0.06) label('e', "x′", px(a) + 6, py(b) - 4, green);
+      if (Math.hypot(c, d) > 0.06) label('e', "y′", px(c) + 6, py(d) - 4, green);
+
+      // the fixed vector A, drawn last so it sits on top
+      arrow(px(0), py(0), px(Ax), py(Ay), accent, 3, 13);
+      ctx.fillStyle = accent; ctx.font = 'italic 700 16px Georgia, serif';
+      ctx.fillText('A', px(Ax) + 8, py(Ay) - 2);
+
+      // origin
+      ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(px(0), py(0), 3, 0, 7); ctx.fill();
+
+      // slider value labels + exactly-parallel warning
+      val('a').textContent = a.toFixed(1); val('b').textContent = b.toFixed(1);
+      val('c').textContent = c.toFixed(1); val('d').textContent = d.toFixed(1);
+      warn.hidden = Math.abs(det) >= eps;
+    }
+
+    root.querySelectorAll('[data-coef]').forEach((el) => el.addEventListener('input', draw));
+    draw();
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-changebasis]').forEach(setup);
+</script>
+
+<style>
+  .cob-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem 1.4rem; }
+  .cob-grid label { display: flex; align-items: center; gap: 0.5rem; color: var(--muted); }
+  .cob-grid input[type="range"] { flex: 1; accent-color: var(--accent); margin: 0; }
+  .cob-warn { color: var(--accent); }
+</style>

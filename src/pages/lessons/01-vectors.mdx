@@ -13,7 +13,33 @@ import RotatedBasis from '../../components/RotatedBasis.astro';
 import BasisVectorsFigure from '../../components/BasisVectorsFigure.astro';
 import VectorWithBasis from '../../components/VectorWithBasis.astro';
 import NewBasisFigure from '../../components/NewBasisFigure.astro';
+import Term from '../../components/Term.astro';
 import Spoiler from '../../components/Spoiler.astro';
+import ChangeOfBasis from '../../components/ChangeOfBasis.astro';
+
+# To-Do:
+- add prerequisites:
+  - Basics of linear algebra: vectors and matrices
+  - Basics of calculus ?
+  - Basics of special relativity
+
+- add disclamer: this is a gentle intro to general relativity.
+To be completely honest with you, the main target audience of this course is...
+myself.
+The course tries to explain complex things in yet another way.
+I tried to make this way balanced:
+not too strict and low-level, which distracts from understanding the most
+important things and creates unnecessary obstacles,
+and not too vague and high-level, which leaves readers one-to-one with significant
+logical gaps or statements pulled out from a magical hat. At a cost of being not very strict
+mathematically, this way is hopefully intuitive enough.
+I hope that this material can be useful for anyone interested
+in general relativity, especially students who struggle to follow the language of
+their coursebook. This course is made with the help of AI. The most of the
+effort is made by a human:
+
+- add numeration of chapters, equations and charts
+- how to split the entire course into lessons, chapters, etc.?
 
 # Vectors
 
@@ -127,7 +153,11 @@ holding $A$ fixed.
 
 ## The general rule for changing from one basis to another
 
-Take any new basis — two independent vectors $e_{x'}, e_{y'}$.
+Take any new basis — two <Term def="A set of vectors is independent when
+none of them is a linear combination of the others — equivalently,
+the only combination equal to zero is the trivial one:
+  " math="c_1 v_1 + \cdots + c_n v_n = 0 \implies c_1 = \cdots =
+  c_n = 0">independent</Term> vectors $e_{x'}, e_{y'}$.
 Each is some combination of the old basis:
 
 $$
@@ -137,12 +167,74 @@ e_{y'} &= c\,e_x + d\,e_y
 \end{aligned}
 $$
 
-The numbers $a, b, c, d$ are arbitrary, subject only to the independence
-condition $ad - bc \neq 0$. Otherwise $e_{x'}$ and $e_{y'}$ do not form a basis,
-because one vector could be expressed in terms of the other (in our
-two-dimensional case that would mean the two basis vectors are parallel).
+The numbers $a, b, c, d$ are almost arbitrary. The only requirement is that
+$e_{x'}$ and $e_{y'}$ are not parallel, which also means that
+$ad - bc \neq 0$ (see the exercise below if you wonder why).
+Parallel $e_{x'}$ and $e_{y'}$ do not form a basis.
 
-Collect them as the matrix $S$ whose
+<Spoiler title="Exercise: prove the equivalence of vector indepence statements">
+
+Given the new vectors in old coordinates, $e_{x'} = (a, b)$ and $e_{y'} = (c, d)$,
+show that the following three statements say exactly the same thing:
+
+1. **Independent** — the only solution of $\alpha\,e_{x'} + \beta\,e_{y'} = 0$ is $\alpha = \beta = 0$.
+2. **Not parallel** — neither vector is a scalar multiple of the other.
+3. $ad - bc \neq 0$.
+
+<Spoiler title="Solution">
+
+**Independent $\iff ad - bc \neq 0$.**
+
+In components, $\alpha\,e_{x'} + \beta\,e_{y'} = 0$ is the system
+
+$$
+\begin{aligned}
+a\,\alpha + c\,\beta &= 0 \\
+b\,\alpha + d\,\beta &= 0
+\end{aligned}
+$$
+
+Eliminate $\beta$ — multiply the first equation by $d$, the second by $c$, and
+subtract:
+
+$$(ad - bc)\,\alpha = 0 .$$
+
+Eliminate $\alpha$ the same way (first by $b$, second by $a$, subtract):
+
+$$(ad - bc)\,\beta = 0 .$$
+
+If $ad - bc \neq 0$, these force $\alpha = \beta = 0$ — only the trivial solution,
+so the vectors are independent. If $ad - bc = 0$, then the coefficients
+$(\alpha, \beta) = (c, -a)$
+solve both equations: the first gives $ac - ca = 0$, the second gives
+$bc - ad = -(ad - bc) = 0$. That is a nontrivial relation unless $a = c = 0$, and
+in that leftover case both vectors have the form $(0,\,\cdot)$ — multiples of
+$e_y$, hence dependent anyway. So $ad - bc = 0$ forces dependence. Therefore
+independent $\iff ad - bc \neq 0$.
+
+**Independent $\iff$ not parallel.**
+If the pair is *dependent*, some $\alpha, \beta$ not both zero give
+$\alpha\,e_{x'} + \beta\,e_{y'} = 0$; whichever coefficient is nonzero lets us
+write one vector as a multiple of the other, so they are parallel. Conversely, if
+$e_{y'} = \lambda\,e_{x'}$, then $\lambda\,e_{x'} - e_{y'} = 0$ is a nontrivial
+relation, so the pair is dependent. Thus dependent $\iff$ parallel, and taking
+negations, independent $\iff$ not parallel.
+
+Putting the two equivalences together, all three conditions are the same.
+
+<Callout type="insight" title="A geometric reading">
+  $ad - bc$ is the signed **area** of the parallelogram spanned by $e_{x'}$ and
+  $e_{y'}$. That area is zero exactly when the parallelogram collapses to a line —
+  when the vectors are parallel. So "$ad - bc \neq 0$" literally says the two
+  vectors enclose a nonzero area, which is the same as pointing in different
+  directions.
+</Callout>
+
+</Spoiler>
+
+</Spoiler>
+
+Collect the coefficients $a, b, c, d$ into a matrix $S$ whose
 columns are the new basis vectors written in old coordinates:
 
 $$S = \begin{bmatrix} a & c \\ b & d \end{bmatrix}$$
@@ -156,8 +248,12 @@ and $e_y$ terms:
 
 $$A = (a\,A_{x'} + c\,A_{y'})\,e_x + (b\,A_{x'} + d\,A_{y'})\,e_y$$
 
-Because the old basis is independent, the coefficients must match one for one.
-In matrix form,
+Does it remind you of how $A$ is written in the old basis,
+$A = A_x\,e_x + A_y\,e_y$?
+Exactly. Because an independent basis gives a *unique* expansion, the two
+expressions must share the same coefficients — so we can read the old components
+straight off, e.g. $A_{x} = a\,A_{x'} + c\,A_{y'}$.
+Or in matrix form,
 
 $$
 \begin{bmatrix} A_x \\ A_y \end{bmatrix}
@@ -174,94 +270,65 @@ $$
 \qquad (\text{new} = S^{-1} \cdot \text{old}).
 $$
 
-No assumption entered beyond "it is a change of basis." The new basis vectors are
-the columns of $S$; the components transform by the inverse, $S^{-1}$.
+The components transform by the inverse, $S^{-1}$.
 
-The two earlier results are just special cases:
-
-- **Rotation** by $\varphi$: $S = \begin{bmatrix}\cos\varphi & -\sin\varphi \\ \sin\varphi & \cos\varphi\end{bmatrix}$, and $S^{-1}$ is rotation by $-\varphi$ — the rule from the previous section.
-- **Doubling** the basis: $S = 2I$, so $S^{-1} = \tfrac{1}{2}I$ and the components halve.
-
-<Callout type="note" title="Definition">
-  Components that transform by the **inverse** $S^{-1}$ of the basis-change matrix
-  $S$ are called **contravariant** ("contra" = against: they vary against the
-  basis). Every arrow-type vector behaves this way. By convention they are marked
-  with an upstairs index, $A^x$.
-</Callout>
-
-<Spoiler title="Exercise">
-
-## Writing the new basis in the old
-
-To find the rule connecting old and new components, we first connect the two
-bases. The new basis vectors are arrows in the same plane, so each is a
-combination of $e_x$ and $e_y$.
-
-For example, let the new axes be the old ones rotated counterclockwise by an angle $\varphi$.
-Then
-
+Consider a simple example: if we just stretch each basis vector to twice its length,
 $$
 \begin{aligned}
-e_{x'} &= \cos\varphi\,e_x + \sin\varphi\,e_y \\
-e_{y'} &= -\sin\varphi\,e_x + \cos\varphi\,e_y
+e_{x'} &= 2\,e_x + 0\,e_y \\
+e_{y'} &= 0\,e_x + 2\,e_y,
 \end{aligned}
 $$
 
-These are not pulled from a hat. $e_{x'}$ is a unit arrow at angle $\varphi$ from
-the old $x$-axis, and a unit arrow at angle $\varphi$ has components
-$(\cos\varphi, \sin\varphi)$ — that is the definition of cosine and sine.
-Likewise $e_{y'}$ is a unit arrow at angle $\varphi + 90°$, giving
-$(-\sin\varphi, \cos\varphi)$.
+this will mean $a = d = 2, \,b = c = 0$, or equivalently
+$S = \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix}$.
+Then $S^{-1}  = \begin{bmatrix} \tfrac{1}{2} & 0 \\ 0 & \tfrac{1}{2} \end{bmatrix}$,
+and the components halve — the basis doubled, the components halved: exactly the
+inverse, as $S^{-1}$ predicts.
+
+<ChangeOfBasis />
+
+<Spoiler title="Exercise: components under a rotation and a squeeze">
+
+Take the vector with old components $(3, 5)$. Build a new basis by rotating the
+old one $30°$ counterclockwise and then squeezing each basis vector to **half**
+its length. In old coordinates the new basis vectors are
+
+$$
+\begin{aligned}
+e_{x'} &= \tfrac{1}{2}\big(\cos 30°\,e_x + \sin 30°\,e_y\big) = \tfrac{\sqrt3}{4}\,e_x + \tfrac{1}{4}\,e_y \\
+e_{y'} &= \tfrac{1}{2}\big(-\sin 30°\,e_x + \cos 30°\,e_y\big) = -\tfrac{1}{4}\,e_x + \tfrac{\sqrt3}{4}\,e_y
+\end{aligned}
+$$
 
 <RotatedBasis />
 
-As a check, at $\varphi = 90°$ we have $\cos 90° = 0$ and $\sin 90° = 1$, so
-$e_{x'} = e_y$ and $e_{y'} = -e_x$: a quarter-turn sends the new $x$-axis onto the
-old $y$-axis, and the new $y$-axis onto the old $-x$.
+Find the components of the vector in this new basis.
 
-## How the components change
+<Spoiler title="Solution">
 
-We have the rule for the basis vectors. Now the real target: the components.
-
-The arrow $A$ is the same object in either basis:
-
-$$A_x\,e_x + A_y\,e_y \;=\; A_{x'}\,e_{x'} + A_{y'}\,e_{y'}$$
-
-To compare the two sides, put everything in one basis. Write the old basis
-vectors in terms of the new ones. The new axes are the old rotated by $+\varphi$,
-so the old axes are the new rotated by $-\varphi$:
+**Build $S$.** Its columns are the new basis vectors written in old coordinates:
 
 $$
-\begin{aligned}
-e_x &= \cos\varphi\,e_{x'} - \sin\varphi\,e_{y'} \\
-e_y &= \sin\varphi\,e_{x'} + \cos\varphi\,e_{y'}
-\end{aligned}
+S = \begin{bmatrix} \tfrac{\sqrt3}{4} & -\tfrac{1}{4} \\ \tfrac{1}{4} & \tfrac{\sqrt3}{4} \end{bmatrix}.
 $$
 
-(This is the previous pair read backwards — swap primed and unprimed and flip the
-sign of $\varphi$ — or just solve those two equations for $e_x, e_y$.)
-
-Substitute into $A = A_x e_x + A_y e_y$ and gather the $e_{x'}$ and $e_{y'}$ terms:
-
-$$A = (A_x\cos\varphi + A_y\sin\varphi)\,e_{x'} + (-A_x\sin\varphi + A_y\cos\varphi)\,e_{y'}$$
-
-Compare with $A = A_{x'} e_{x'} + A_{y'} e_{y'}$. Because $e_{x'}$ and $e_{y'}$ are
-independent directions, the coefficients must match one for one:
+**Invert.** Using a formula for inverting 2x2 matrix $\begin{bmatrix} a & c \\ b & d \end{bmatrix}^{-1} = \dfrac{1}{ad-bc}\begin{bmatrix} d & -c \\ -b & a \end{bmatrix}$,
 
 $$
-\begin{aligned}
-A_{x'} &= A_x\cos\varphi + A_y\sin\varphi \\
-A_{y'} &= -A_x\sin\varphi + A_y\cos\varphi
-\end{aligned}
+S^{-1} = 4\begin{bmatrix} \tfrac{\sqrt3}{4} & \tfrac{1}{4} \\ -\tfrac{1}{4} & \tfrac{\sqrt3}{4} \end{bmatrix}
+= \begin{bmatrix} \sqrt3 & 1 \\ -1 & \sqrt3 \end{bmatrix}.
 $$
 
-That is the rule: from the old components and the angle $\varphi$, it returns the
-new ones. It is exactly what the slider above computes — at $\varphi = 0$ it gives
-$(3,4)$ back; at the angle that lines the $x$-axis up with $A$, it gives $(5,0)$.
+**Apply $S^{-1}$ to the old components** $(3, 5)$:
 
-<Callout type="insight" title="The pattern">
-  The axes turned by $+\varphi$, but the component pair turned by $-\varphi$. The
-  components rotate opposite to the axes.
-</Callout>
+$$
+\begin{bmatrix} A_{x'} \\ A_{y'} \end{bmatrix}
+= \begin{bmatrix} \sqrt3 & 1 \\ -1 & \sqrt3 \end{bmatrix}
+\begin{bmatrix} 3 \\ 5 \end{bmatrix}
+= \begin{bmatrix} 3\sqrt3 + 5 \\ 5\sqrt3 - 3 \end{bmatrix}
+\approx \begin{bmatrix} 10.20 \\ 5.66 \end{bmatrix}.
+$$
 
+</Spoiler>
 </Spoiler>

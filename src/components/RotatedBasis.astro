@@ -1,35 +1,36 @@
 ---
-// Static figure: the old basis (e_x, e_y) and a new basis (e_x', e_y')
-// obtained by rotating the old one counterclockwise by an angle phi (~33°).
-// Inline SVG using CSS variables, so it adapts to light/dark themes.
+// Static figure: the old basis (e_x, e_y) and a new basis (e_x', e_y') obtained
+// by rotating the old one 30° counterclockwise and squeezing each vector to half
+// its length. Inline SVG using CSS variables, so it adapts to light/dark themes.
 ---
 <figure class="figure rotbasis">
-  <svg viewBox="0 0 210 210" role="img"
-    aria-label="The old basis vectors e_x and e_y, and a new basis e_x-prime and e_y-prime rotated by an angle phi.">
-    <!-- old basis -->
-    <line class="b-old" x1="90" y1="180" x2="180" y2="180" />
-    <polygon class="f-old" points="180,180 170,184 170,176" />
-    <line class="b-old" x1="90" y1="180" x2="90" y2="90" />
-    <polygon class="f-old" points="90,90 94,100 86,100" />
+  <svg viewBox="0 0 215 180" role="img"
+    aria-label="Old basis vectors e_x and e_y, and a shorter new basis e_x-prime, e_y-prime, rotated 30 degrees counterclockwise and scaled to half length.">
+    <!-- old basis (unit length) -->
+    <line class="b-old" x1="65" y1="155" x2="180" y2="155" />
+    <polygon class="f-old" points="180,155 171,159 171,151" />
+    <line class="b-old" x1="65" y1="155" x2="65" y2="40" />
+    <polygon class="f-old" points="65,40 69,49 61,49" />
 
-    <!-- new basis (rotated) -->
-    <line class="b-new" x1="90" y1="180" x2="165.5" y2="131" />
-    <polygon class="f-new" points="165.5,131 159.29,139.8 154.93,133.08" />
-    <line class="b-new" x1="90" y1="180" x2="41" y2="104.5" />
-    <polygon class="f-new" points="41,104.5 49.8,110.71 43.08,115.07" />
+    <!-- new basis: rotated 30° CCW and half as long -->
+    <line class="b-new" x1="65" y1="155" x2="114.80" y2="126.25" />
+    <polygon class="f-new" points="114.80,126.25 109.01,134.21 105.01,127.29" />
+    <line class="b-new" x1="65" y1="155" x2="36.25" y2="105.20" />
+    <polygon class="f-new" points="36.25,105.20 44.21,110.99 37.29,114.99" />
 
-    <!-- angle phi -->
-    <path class="arc" d="M 125 180 A 35 35 0 0 0 119.35 160.94" />
+    <!-- 30° angle between e_x and e_x' -->
+    <path class="arc" d="M 95 155 A 30 30 0 0 0 90.98 140" />
 
     <!-- labels -->
-    <text class="lab old" x="184" y="185">e<tspan class="sub">x</tspan></text>
-    <text class="lab old" x="96"  y="84">e<tspan class="sub">y</tspan></text>
-    <text class="lab new" x="168" y="125">e<tspan class="sub">x′</tspan></text>
-    <text class="lab new" x="10"  y="101">e<tspan class="sub">y′</tspan></text>
-    <text class="lab new" x="129" y="172">φ</text>
+    <text class="lab old" x="184" y="159">e<tspan class="sub">x</tspan></text>
+    <text class="lab old" x="53"  y="37">e<tspan class="sub">y</tspan></text>
+    <text class="lab new" x="118" y="120">e<tspan class="sub">x′</tspan></text>
+    <text class="lab new" x="12"  y="102">e<tspan class="sub">y′</tspan></text>
+    <text class="ang" x="99" y="148">30°</text>
   </svg>
   <figcaption>The old basis (<em>e</em><sub>x</sub>, <em>e</em><sub>y</sub>) and the new basis
-    (<em>e</em><sub>x′</sub>, <em>e</em><sub>y′</sub>), the old rotated by an angle <em>φ</em>.</figcaption>
+    (<em>e</em><sub>x′</sub>, <em>e</em><sub>y′</sub>): the old one rotated 30° counterclockwise
+    and squeezed to half its length.</figcaption>
 </figure>
 
 <style>
@@ -43,4 +44,5 @@
   .rotbasis .lab.old { fill: var(--ink); }
   .rotbasis .lab.new { fill: var(--accent); }
   .rotbasis .sub  { font-size: 10px; baseline-shift: -3px; font-style: italic; }
+  .rotbasis .ang  { fill: var(--ink); font-family: system-ui, sans-serif; font-size: 12px; }
 </style>
