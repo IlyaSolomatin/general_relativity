@@ -1,0 +1,54 @@
+---
+// Static figure: the geometric meaning of the dot product.
+// A·B = |B| × (projection of A onto B) = |A||B|cos θ.
+// Inline SVG using CSS variables so it follows the light/dark theme.
+---
+<figure class="figure dotprod">
+  <svg viewBox="0 0 330 225" role="img"
+    aria-label="Two vectors A and B from a common origin with angle theta between them, and the projection of A onto B, of length |A| cos theta.">
+    <!-- vector B -->
+    <line class="vecB" x1="55" y1="175" x2="305" y2="175" />
+    <polygon class="fillB" points="305,175 294,170 294,180" />
+
+    <!-- highlighted projection of A onto B, along B's line -->
+    <line class="proj" x1="55" y1="175" x2="170" y2="175" />
+
+    <!-- dashed perpendicular from A's tip down to B's line -->
+    <line class="drop" x1="170" y1="79" x2="170" y2="175" />
+    <!-- right-angle mark at the foot -->
+    <path class="right" d="M 170 163 L 158 163 L 158 175" />
+
+    <!-- vector A -->
+    <line class="vecA" x1="55" y1="175" x2="170" y2="79" />
+    <polygon class="fillA" points="170,79 164,90.5 157.6,82.9" />
+
+    <!-- angle theta at the origin -->
+    <path class="arc" d="M 95 175 A 40 40 0 0 0 85.6 149.3" />
+
+    <!-- labels -->
+    <text class="labA" x="176" y="74">A</text>
+    <text class="labB" x="300" y="194">B</text>
+    <text class="labT" x="101" y="161">θ</text>
+    <text class="labP" x="70" y="197">|A| cos θ</text>
+  </svg>
+  <figcaption>
+    The dot product measures projection: A·B is the length of B times the
+    projection of A onto B (the green segment, |A|·cos θ). So A·B = |A|·|B|·cos θ.
+  </figcaption>
+</figure>
+
+<style>
+  .dotprod svg { width: 100%; max-width: 380px; height: auto; }
+  .dotprod .vecB  { stroke: var(--ink);    stroke-width: 2;   stroke-linecap: round; }
+  .dotprod .fillB { fill: var(--ink); }
+  .dotprod .vecA  { stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; }
+  .dotprod .fillA { fill: var(--accent); }
+  .dotprod .proj  { stroke: #2e7d5b; stroke-width: 4; stroke-linecap: round; }
+  .dotprod .drop  { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 4; }
+  .dotprod .right { stroke: var(--muted); stroke-width: 1; fill: none; }
+  .dotprod .arc   { stroke: var(--ink); stroke-width: 1.5; fill: none; }
+  .dotprod .labA  { fill: var(--accent); font: italic 700 16px Georgia, serif; }
+  .dotprod .labB  { fill: var(--ink);    font: italic 700 16px Georgia, serif; }
+  .dotprod .labT  { fill: var(--ink);    font: italic 14px Georgia, serif; }
+  .dotprod .labP  { fill: #2e7d5b;       font: italic 13px Georgia, serif; }
+</style>

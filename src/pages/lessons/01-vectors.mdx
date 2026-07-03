@@ -16,6 +16,10 @@ import NewBasisFigure from '../../components/NewBasisFigure.astro';
 import Term from '../../components/Term.astro';
 import Spoiler from '../../components/Spoiler.astro';
 import ChangeOfBasis from '../../components/ChangeOfBasis.astro';
+import DotProduct from '../../components/DotProduct.astro';
+import PolarGrid from '../../components/PolarGrid.astro';
+import Eq from '../../components/Eq.astro';
+import EqRef from '../../components/EqRef.astro';
 
 # To-Do:
 - add prerequisites:
@@ -61,8 +65,9 @@ grid is something we add afterward. The walk is real without it.
 
 To calculate with the arrow, we need numbers. So we lay down axes.
 
-Draw two perpendicular axes, $x$ (east) and $y$ (north). Take the arrow *"3 steps
-east, 4 steps north."* Against these axes we read off two numbers:
+Draw two perpendicular axes, $x$ (east) and $y$ (north) — the familiar straight,
+perpendicular $x$–$y$ grid, called a **Cartesian** coordinate system. Take the
+arrow *"3 steps east, 4 steps north."* Against these axes we read off two numbers:
 
 - along $x$:  $\;3$
 - along $y$:  $\;4$
@@ -129,6 +134,15 @@ tail, and you reach the tip of $A$.
   The **basis vectors** are unit arrows along the chosen axes. A vector's
   **components** are the amounts of each basis vector needed to build it — here,
   3 of $e_x$ and 4 of $e_y$.
+</Callout>
+
+<Callout type="insight" title="The basis is a choice">
+  Basis vectors and the coordinate grid are separate things: the grid labels
+  *points*, a basis decomposes *vectors*. We **chose** $e_x, e_y$ as unit arrows
+  along the axes — the grid's own **coordinate basis** (the arrow for a one-unit
+  step in each coordinate). That choice is exactly why a vector's components come
+  out equal to its grid coordinates. A stretched basis (say $|e_x| = 2$) or a
+  tilted one would describe the same arrow with different components.
 </Callout>
 
 ## Changing the axes is changing the basis
@@ -332,3 +346,179 @@ $$
 
 </Spoiler>
 </Spoiler>
+
+## The length of a vector
+
+Imagine a physical ruler of unit length. We can lay it against the arrow to
+measure how long it is. But can we calculate that length (designated $|A|$) from the vector's
+components instead?
+
+Yes. The immediate idea is the Pythagorean theorem: for components $(A_x, A_y)$,
+
+$$|A| = \sqrt{A_x^2 + A_y^2}.$$
+
+This is a good choice for an *orthonormal* basis — where the basis vectors have
+unit length and form a right angle — but it will not work in other bases. To
+adjust the calculation, we need to know the lengths of the basis vectors and the
+angle between them.
+
+## The dot product
+
+The tool that carries that information is the **dot product**. It takes two vectors
+and returns a number:
+
+$$A \cdot B = |A|\,|B|\cos\theta,$$
+
+where $\theta$ is the angle between them.
+
+Set $B = A$: a vector makes angle $0$ with itself and $\cos 0 = 1$, so
+
+$$A \cdot A = |A|^2, \qquad\text{hence}\qquad |A| = \sqrt{A \cdot A}.$$
+
+Dot product is linear in each slot — it distributes over sums and lets scalars out:
+
+$$(A + B)\cdot C = A\cdot C + B\cdot C, \qquad (kA)\cdot B = k\,(A\cdot B),$$
+
+and likewise in the second slot.
+
+<DotProduct />
+
+## The metric
+
+Write $A$ in a basis and dot it with itself, using linearity in both slots:
+
+$$A \cdot A = (A_x\,e_x + A_y\,e_y) \cdot (A_x\,e_x + A_y\,e_y) = A_x^2\,(e_x\cdot e_x) + 2\,A_x A_y\,(e_x\cdot e_y) + A_y^2\,(e_y\cdot e_y).$$
+
+(The two cross terms merge because $e_x\cdot e_y = e_y\cdot e_x$.) Every coefficient
+is a dot product of basis vectors. Name them:
+
+$$g_{xx} = e_x\cdot e_x,\qquad g_{xy} = e_x\cdot e_y,\qquad g_{yy} = e_y\cdot e_y.$$
+
+Then
+
+<Eq label="length">
+
+$$|A|^2 = g_{xx}\,A_x^2 + 2\,g_{xy}\,A_x A_y + g_{yy}\,A_y^2.$$
+
+</Eq>
+
+<Callout type="note" title="The metric">
+  The **metric** is the set of dot products among the basis vectors —
+  $g_{xx} = e_x\cdot e_x$, $g_{xy} = e_x\cdot e_y$, $g_{yy} = e_y\cdot e_y$. It is
+  what turns components into true lengths: $g_{xx} = |e_x|^2$ and $g_{yy} = |e_y|^2$
+  are the basis vectors' squared lengths, and $g_{xy} = |e_x|\,|e_y|\cos\theta$
+  carries the angle between them.
+</Callout>
+
+Two checks:
+
+- **Orthonormal basis** ($g_{xx} = g_{yy} = 1$, $g_{xy} = 0$): the formula collapses to $|A|^2 = A_x^2 + A_y^2$ — plain Pythagoras.
+- **A stretched basis**, with $e_x$ of length $2$ and $e_y$ of length $1$, perpendicular ($g_{xx} = 4$, $g_{yy} = 1$, $g_{xy} = 0$): a vector with components $(1.5, 4)$ has $|A|^2 = 4\,(1.5)^2 + 4^2 = 9 + 16 = 25$, so $|A| = 5$. The naive $\sqrt{1.5^2 + 4^2} \approx 4.27$ would be wrong; the metric gives the true $5$.
+
+A careful reader may ask: "wait, but to calculate the length of a vector, we also
+need to know lengths of basis vectors? Where do we get it from?" Indeed, to measure lengths of any kinds and distances we need
+to have a notion of a unit length. It can be introduced as a "physical ruler" like
+we did in chapter "The length of a vector", or as an orthonormal basis where we
+agree to call the length of the basis vector a unit length. This is the only "calibration"
+we need to perform to be able to calculate lengths of any vectors in any bases.
+
+## The metric gives angles too
+
+Length was the case $B = A$. The same expansion works for the dot product of *any*
+two vectors. With $A = A_x e_x + A_y e_y$ and $B = B_x e_x + B_y e_y$, linearity
+gives
+
+$$A \cdot B = g_{xx}\,A_x B_x + g_{xy}\,(A_x B_y + A_y B_x) + g_{yy}\,A_y B_y.$$
+
+The same three numbers $g_{xx}, g_{xy}, g_{yy}$. So the metric computes the dot
+product of any two vectors from their components — and once you have dot products,
+you have angles:
+
+$$\cos\theta = \frac{A \cdot B}{|A|\,|B|}.$$
+
+So the metric is the complete geometry machine for the space: feed it two vectors'
+components and it returns lengths (set $B = A$) and angles. Every distance and
+every angle is encoded in $g_{xx}, g_{xy}, g_{yy}$.
+
+## The metric may change from point to point
+
+So far we used one basis for the whole plane, so the metric was a single constant
+table. Generally speaking, it is not necessarily the case.
+
+Use **polar coordinates**: label each point by its distance from the center $r$
+and its angle $\theta$. We can choose the basis vectors for any point in the following way:
+
+- $e_r$ — the step that increases $r$, pointing outward. Moving out by $dr$ always covers distance $dr$, so $|e_r| = 1$ everywhere.
+- $e_\theta$ — the step that increases the angle $\theta$. Increasing $\theta$ by a small $d\theta$ moves you along an arc of length $r\,d\theta$: near the center a degree of angle is a tiny move, far out the same degree is a large one. So the per-angle step has length $r$, growing as you go outward.
+
+<Callout type="insight" title="Why this basis?">
+  Remember, we are free to pick any basis at each point. We pick *this* one because it is the
+  coordinate basis of the polar grid — the one in which a small coordinate shift *is*
+  its own decomposition. Move by $(dr, d\theta)$ and the displacement is
+  $dr\,e_r + d\theta\,e_\theta$, so its components are exactly the coordinate steps
+  $(dr, d\theta)$. That is what fixes the lengths: $e_r$ is one unit of distance
+  ($|e_r| = 1$), and $e_\theta$ is the arc that one unit of angle sweeps
+  ($|e_\theta| = r$).
+</Callout>
+
+<PolarGrid />
+
+Reading off the metric (dot products of the basis vectors):
+
+$$g_{rr} = |e_r|^2 = 1, \qquad g_{\theta\theta} = |e_\theta|^2 = r^2, \qquad g_{r\theta} = e_r\cdot e_\theta = 0.$$
+
+So $g_{\theta\theta} = r^2$: the metric is genuinely different at different points —
+small near the center, large far out. **The metric changes from point to point.**
+
+And so does the basis. For the Cartesian grid, $e_x$ and $e_y$ were the same arrows
+at every point — one basis served the whole plane. Here they are not: $e_r$ and
+$e_\theta$ point in different directions, and $e_\theta$ has a different length, at
+every point. A curvilinear grid does not carry one fixed basis; it carries a basis
+*at each point* — a field of basis vectors.
+
+<Callout type="insight" title="The changes compensate">
+  Both the basis and the metric change from point to point. But the metric is just
+  the dot products of the local basis, $g_{ij} = e_i\cdot e_j$, so the components
+  and the metric always change together. In the length formula
+  <EqRef label="length" /> their changes cancel, and it gives the true length at
+  every point.
+</Callout>
+
+A careful reader may object: "earlier we decomposed a vector into basis
+vectors, but now the basis is defined only at a point, while a vector reaches
+across space, through many different local bases. So how do we decompose a vector
+at all?"
+
+The instinct behind this worry is exactly right, and it becomes the full story
+once space is genuinely curved (which comes later). But here, on the flat plane in
+polar coordinates, nothing is actually lost.
+
+The plane is still flat, so a large arrow between two distant points is still a
+perfectly good vector — you can add such arrows and scale them exactly as before.
+What changed is only that the coordinate basis $(e_r, e_\theta)$ differs from point
+to point, so there is no single "polar basis" to expand a large arrow in. But you
+are not stuck: flat space always admits a fixed basis (e.g. Cartesian), and any large
+vector can be decomposed there — or you may freeze the polar basis at a single
+chosen point and use it, since it is still a valid basis of the whole flat plane,
+even though it won't be linked to the polar coordinate system anymore.
+The position-dependent basis still works for local, tiny vectors though.
+
+## The line element
+
+Everything so far measured one straight arrow $A$. But most geometry is about the
+distance *along a path* — and about spaces whose geometry changes from place to
+place, as we just saw. The metric handles both through one idea: measure a tiny
+step, then add up the steps.
+
+A tiny step is just a very short vector, with components $(dx, dy)$. Its squared
+length is the metric applied to it:
+
+$$ds^2 = g_{xx}\,dx^2 + 2\,g_{xy}\,dx\,dy + g_{yy}\,dy^2.$$
+
+$ds$ is the **line element** — the length of an infinitesimal step. The length of
+a whole path is the sum (integral) of $ds$ along it.
+
+Two things this unlocks that a single straight arrow could not:
+
+1. **Paths can curve** — lay down tiny straight steps along any path and add their lengths.
+2. **The metric can vary from point to point** — each step is measured by the local metric where it sits.

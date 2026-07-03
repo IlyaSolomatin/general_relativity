@@ -39,5 +39,22 @@ const pageDesc =
         <p>Built brick by brick, with rigor. · <a href="https://github.com/IlyaSolomatin/general_relativity">source</a></p>
       </footer>
     </div>
+
+    <script>
+      // Cross-references for numbered equations. The number shown beside each
+      // equation is drawn by CSS (a counter); here we fill each <EqRef> with the
+      // matching number, assigned in document order among `.equation` blocks.
+      const equations = Array.from(document.querySelectorAll('.equation'));
+      const numByLabel = new Map();
+      equations.forEach((el, i) => {
+        const label = el.getAttribute('data-eq-label');
+        if (label) numByLabel.set(label, i + 1);
+      });
+      document.querySelectorAll('.eq-ref').forEach((a) => {
+        const label = a.getAttribute('data-eq-ref');
+        const n = label ? numByLabel.get(label) : undefined;
+        if (n) a.textContent = '(' + n + ')';
+      });
+    </script>
   </body>
 </html>

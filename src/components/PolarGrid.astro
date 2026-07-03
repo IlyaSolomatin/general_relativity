@@ -1,0 +1,65 @@
+---
+// Static figure: a polar grid (constant-r circles, constant-θ rays) with a
+// point P at (r, θ) and its two coordinate steps — dr (radial) and the arc
+// r·dθ (tangential). Inline SVG using CSS variables for light/dark themes.
+---
+<figure class="figure polar">
+  <svg viewBox="0 0 270 285" role="img"
+    aria-label="A polar grid: concentric circles of constant r and radial rays of constant theta, with a point P and its coordinate steps dr and r d-theta.">
+
+    <!-- constant-r circles -->
+    <path class="grid" d="M 110 260 A 70 70 0 0 0 40 190" />
+    <path class="grid" d="M 180 260 A 140 140 0 0 0 40 120" />
+    <path class="grid" d="M 250 260 A 210 210 0 0 0 40 50" />
+
+    <!-- constant-θ rays (faint) -->
+    <line class="grid" x1="40" y1="260" x2="250" y2="260" />
+    <line class="grid" x1="40" y1="260" x2="221.9" y2="155" />
+    <line class="grid" x1="40" y1="260" x2="145" y2="78.1" />
+    <line class="grid" x1="40" y1="260" x2="40" y2="50" />
+
+    <!-- the two rays bounding dθ -->
+    <line class="ray" x1="40" y1="260" x2="200.8" y2="125" />
+    <line class="ray" x1="40" y1="260" x2="166.4" y2="92.3" />
+
+    <!-- angle θ at the origin -->
+    <path class="accent" d="M 70 260 A 30 30 0 0 0 63 240.7" />
+    <text class="lab-accent" x="74" y="248">θ</text>
+
+    <!-- angle dθ at the origin -->
+    <path class="accent" d="M 78.3 227.9 A 50 50 0 0 0 70.1 220.1" />
+    <text class="lab-accent" x="82" y="214">dθ</text>
+
+    <!-- r along the θ ray -->
+    <text class="lab" x="102" y="221">r</text>
+
+    <!-- step r·dθ: arc at radius r between the two rays -->
+    <path class="accent" d="M 158 161 A 154 154 0 0 0 132.7 137" />
+    <polygon class="accent-fill" points="132.7,137 141.5,138.6 136.7,145" />
+    <text class="lab-accent" x="118" y="165">r dθ</text>
+
+    <!-- step dr: radial segment outward from P -->
+    <line class="accent" x1="158" y1="161" x2="184" y2="139.1" />
+    <polygon class="accent-fill" points="184,139.1 180.5,147.3 175.3,141.1" />
+    <text class="lab-accent" x="168" y="134">dr</text>
+
+    <!-- point P -->
+    <circle class="pt" cx="158" cy="161" r="3.2" />
+    <text class="lab" x="163" y="176">P</text>
+  </svg>
+  <figcaption>Polar coordinates: circles are constant <em>r</em>, rays are constant <em>θ</em>.
+    A step <em>dr</em> always has length <em>dr</em>;
+    a step <em>dθ</em> sweeps an arc of length <em>r&#8202;dθ</em>, which grows the farther out you are.</figcaption>
+</figure>
+
+<style>
+  .polar svg { width: 100%; max-width: 380px; height: auto; display: block; margin: 0 auto; }
+  .polar .grid { stroke: rgba(128,128,128,0.32); fill: none; stroke-width: 1; }
+  .polar .ray  { stroke: var(--muted); fill: none; stroke-width: 1.4; }
+  .polar .accent { stroke: var(--accent); fill: none; stroke-width: 2.4; }
+  .polar .accent-fill { fill: var(--accent); }
+  .polar .pt { fill: var(--ink); }
+  .polar text { font-family: Georgia, serif; font-style: italic; }
+  .polar .lab { fill: var(--ink); font-size: 14px; }
+  .polar .lab-accent { fill: var(--accent); font-size: 14px; }
+</style>

@@ -1,0 +1,20 @@
+---
+// A numbered display equation. Wrap a $$...$$ block:
+//
+//   <Eq label="pythagoras">
+//
+//   $$a^2 + b^2 = c^2$$
+//
+//   </Eq>
+//
+// The number (in document order among <Eq> blocks) is drawn on the right by CSS.
+// Reference it in text with <EqRef label="pythagoras" />.
+interface Props {
+  label?: string;
+}
+const { label } = Astro.props;
+---
+<div class="equation" id={label ? `eq-${label}` : undefined} data-eq-label={label ?? undefined}>
+  <div class="equation-body"><slot /></div>
+  <span class="equation-number" aria-hidden="true"></span>
+</div>

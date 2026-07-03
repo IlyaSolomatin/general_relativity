@@ -227,3 +227,30 @@ pre code { background: none; padding: 0; }
 .widget canvas { width: 100%; height: auto; display: block; border-radius: 6px; }
 .widget-hint { font-family: var(--sans); font-size: 0.82rem; color: var(--muted); margin: 0.7rem 0 0; text-align: center; }
 .mono { font-family: var(--mono); color: var(--accent); font-weight: 600; }
+
+/* --- numbered equations ------------------------------------------ */
+body { counter-reset: eqnum; }
+.equation {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.4rem 0;
+  counter-increment: eqnum;
+}
+.equation > .equation-body { flex: 1; min-width: 0; }
+.equation > .equation-body .katex-display { margin: 0; }
+.equation > .equation-number {
+  flex: none;
+  color: var(--muted);
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.equation > .equation-number::before { content: "(" counter(eqnum) ")"; }
+.eq-ref {
+  color: var(--accent);
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.eq-ref:hover { text-decoration: underline; }

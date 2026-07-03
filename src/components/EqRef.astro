@@ -1,0 +1,10 @@
+---
+// A reference to a numbered equation: <EqRef label="pythagoras" />.
+// Renders the equation's number as a link; the number is filled in by the
+// numbering script in BaseLayout once the page loads.
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+<a class="eq-ref" href={`#eq-${label}`} data-eq-ref={label}>(?)</a>
